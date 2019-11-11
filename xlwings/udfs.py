@@ -312,6 +312,15 @@ def safe_delete_from_cache(cache, key, task_key_attr='formula_cache_key'):
         pass
 
 
+def get_array_formula_from_formula(caller):
+    try:
+        formula_tup = caller.formula
+    except AttributeError:
+        formula_tup = caller.Formula
+
+    return formula_tup[0][0]
+
+
 def call_udf(module_name, func_name, args, this_workbook=None, caller=None):
 
     module = get_udf_module(module_name)
@@ -376,7 +385,7 @@ def call_udf(module_name, func_name, args, this_workbook=None, caller=None):
                     # Sometimes still hitting here due to FormulaArray not being available, yet .formula is still available
                     # .formula has repeated formulas in a tuple of tuples, one for each output cell. Extract the top left
                     try:
-                        formula_array = caller.formula[0][0]
+                        formula_array = get_array_formula_from_formula(caller)
                         cache[formula_cache_key] = formula_array
                     except (pywintypes.com_error, AttributeError):
                         import pdb
