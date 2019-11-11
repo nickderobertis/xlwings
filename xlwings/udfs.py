@@ -209,7 +209,11 @@ class DelayedResizeDynamicArrayFormula(object):
         formula = self.caller.FormulaArray
         if formula is None:
             # Could not read formula properly, get from cache
-            formula = cache.get(self.formula_cache_key)
+            try:
+                formula = cache[self.formula_cache_key]
+            except KeyError:
+                import pdb
+                pdb.set_trace()
         if self.needs_clearing:
             self.caller.ClearContents()
         self.target_range.api.FormulaArray = formula
