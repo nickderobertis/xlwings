@@ -378,7 +378,9 @@ def call_udf(module_name, func_name, args, this_workbook=None, caller=None):
                     try:
                         formula_array = caller.formula[0][0]
                         cache[formula_cache_key] = formula_array
-                    except pywintypes.com_error:
+                    except (pywintypes.com_error, AttributeError):
+                        import pdb
+                        pdb.set_trace()
                         raise Exception(f'not able to get formula for {func_name} from caller or cache')
             cache_key = get_cache_key(func, args, caller)
             cached_value = cache.get(cache_key)
